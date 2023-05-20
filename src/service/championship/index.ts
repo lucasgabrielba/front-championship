@@ -1,9 +1,9 @@
 import axios from "axios"
-import { Championship, ChampionshipDTO } from "./championship"
+import { ChampionshipDTO, CreateChampionship } from "./championship"
 
 const url = 'http://localhost:4000/championship'
 
-export async function createChampionship(data: ChampionshipDTO): Promise<Championship | undefined> {
+export async function createChampionship(data: CreateChampionship): Promise<ChampionshipDTO | undefined> {
   try {
     const response = await axios.post(url, data)
     return response.data

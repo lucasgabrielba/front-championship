@@ -2,6 +2,7 @@ import { useForm, Controller } from "react-hook-form";
 import { TextField, Button, Box, Typography } from "@mui/material";
 import { createChampionship } from "../../../service/championship";
 import { useNavigate } from "react-router-dom";
+import { CreateChampionship } from "../../../service/championship/championship";
 
 export function CreateChampionshipForm() {
   const navigate = useNavigate();
@@ -9,19 +10,25 @@ export function CreateChampionshipForm() {
   const {
     control,
     handleSubmit,
-    formState: { errors },
-  } = useForm();
+    formState: { errors, isValid },
+  } = useForm<CreateChampionship>({
+    mode: "onChange",
+    defaultValues: {
+      name: "",
+      rounds: 0, // Defina o valor inicial como 0 ou outro número válido
+    },
+  });
 
-
-  const onSubmit = (data: any) => {
-    try{
-      createChampionship(data);
-     
-    }catch{
-      console.log("erro")
+  const onSubmit = async (data: CreateChampionship) => {
+    try {
+      const response = await createChampionship(data);
+      const championshipId = response?.id
+      navigate(`/addDrivers/${championshipId}`);
+    } catch (error) {
+      console.log("erro");
     }
   };
-
+  
   return (
     <Box
       sx={{
@@ -62,7 +69,6 @@ export function CreateChampionshipForm() {
             name="rounds"
             control={control}
             rules={{ required: true, min: 1, max: 10 }}
-            defaultValue=""
             render={({ field }) => (
               <TextField
                 id="numberOfRaces"
@@ -71,12 +77,14 @@ export function CreateChampionshipForm() {
                 variant="outlined"
                 margin="normal"
                 fullWidth
-                error={!!errors.numberOfRaces}
+                error={!!errors.rounds}
                 helperText={
-                  (errors.numberOfRaces?.type === "required" &&
+                  (errors.rounds?.type === "required" &&
                     "O número de corridas é obrigatório.") ||
-                  (errors.numberOfRaces?.type === "min" &&
-                    "O número mínimo de corridas é 1.")
+                  (errors.rounds?.type === "min" &&
+                    "O número mínimo de corridas é 1.") ||
+                  (errors.rounds?.type === "max" &&
+                    "O número máximo de corridas é 10.")
                 }
                 {...field}
               />
@@ -88,9 +96,9 @@ export function CreateChampionshipForm() {
             variant="contained"
             color="primary"
             sx={{ marginTop: 1 }}
-            onClick={() => navigate("/addDrivers")}
+            disabled={!isValid}
           >
-            Criar campeonato
+            Adicionar Jogadores
           </Button>
         </form>
       </Box>
