@@ -32,3 +32,12 @@ export async function addScoreInDrivers(data: Driver[], championshipId: string):
     new Error('err')
   }
 }
+
+export async function resetChampionship(data: ScoreDTO[]): Promise<boolean | undefined> {
+  try {
+    const response = await axios.post(url + `/resetScores`, data)
+    return response.data
+  } catch (err) {
+    new Error('err')
+  }
+}

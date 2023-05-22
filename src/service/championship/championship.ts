@@ -1,6 +1,14 @@
 export interface CreateChampionship {
   name: string
   rounds: number
+  bet: string
+}
+
+export interface UpdateChampionship {
+  name: string
+  rounds: number
+  stage: number
+  bet: string
 }
 
 export interface ChampionshipDTO {
@@ -9,6 +17,7 @@ export interface ChampionshipDTO {
   rounds: number
   score: number
   stage: number
+  bet: string
   createdAt: string
   updatedAt: string
   deletedAt: string

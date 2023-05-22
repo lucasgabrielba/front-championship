@@ -15,7 +15,8 @@ export function CreateChampionshipForm() {
     mode: "onChange",
     defaultValues: {
       name: "",
-      rounds: 0, // Defina o valor inicial como 0 ou outro número válido
+      rounds: 0,
+      bet: "",
     },
   });
 
@@ -85,6 +86,28 @@ export function CreateChampionshipForm() {
                     "O número mínimo de corridas é 1.") ||
                   (errors.rounds?.type === "max" &&
                     "O número máximo de corridas é 10.")
+                }
+                {...field}
+              />
+            )}
+          />
+
+<Controller
+            name="bet"
+            control={control}
+            rules={{ required: true, min: 1, max: 10 }}
+            render={({ field }) => (
+              <TextField
+                id="bet"
+                label="O perderdor deve..."
+                type="text"
+                variant="outlined"
+                margin="normal"
+                fullWidth
+                error={!!errors.bet}
+                helperText={
+                  (errors.bet?.type === "required" &&
+                    "Não vale a dignidade se não tiver que fazer nada.")
                 }
                 {...field}
               />

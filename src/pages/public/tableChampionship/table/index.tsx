@@ -50,7 +50,8 @@ export function DriversTable({ drivers }: DriversTableProps) {
                       ? "#c8e6c9"
                       : index === 0 && firstDriver.score < 0
                       ? "#ffcdd2"
-                      : index === drivers.length - 1
+                      : index === drivers.length - 1 && 
+                      drivers[drivers.length - 1].score !== 0
                       ? "#ffcdd2"
                       : "transparent",
                 }}
@@ -67,24 +68,6 @@ export function DriversTable({ drivers }: DriversTableProps) {
           </TableBody>
         </Table>
       </TableContainer>
-      {firstDriver.score !== 0 && (
-        <Box
-          sx={{
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            marginTop: "10px",
-          }}
-        >
-          <Box sx={{ flexGrow: 1 }} />
-          <IconButton color="inherit">
-            <ArrowUpward fontSize="large" />
-          </IconButton>
-          <Typography variant="h6" align="center" color="textSecondary">
-            {"Esse aqui tá fudido"}
-          </Typography>
-        </Box>
-      )}
     </Box>
   );
 }

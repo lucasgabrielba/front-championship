@@ -1,9 +1,9 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useForm, Controller } from "react-hook-form";
 import { TextField, Button, Typography, Box, IconButton } from "@mui/material";
 import { Delete } from "@mui/icons-material";
 import { useNavigate, useParams } from "react-router-dom";
-import { createDriversAndScores } from "../../../service/score";
+import { createDriversAndScores, getTable } from "../../../service/score";
 
 interface RunnerFormData {
   name: string;
@@ -42,6 +42,23 @@ export function AddRunnerForm() {
       console.log("erro ao criar drivers");
     }
   };
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await getTable(championshipId!);
+        const drivers = response?.map(item => item.driver.name);
+        if (drivers) {
+          setRunners(drivers);
+        }
+      } catch (error) {
+        console.log('err', error);
+      }
+    };
+  
+    fetchData();
+  }, []);
+  
 
   return (
     <Box
@@ -109,7 +126,7 @@ export function AddRunnerForm() {
             onClick={handleCreateChampionship}
             disabled={runners.length < 2}
           >
-            Criar Campeonato
+            Salvar
           </Button>
         </form>
       </Box>

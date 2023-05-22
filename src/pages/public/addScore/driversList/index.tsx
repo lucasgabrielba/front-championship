@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Button } from "@mui/material";
+import { Box, Button, Typography } from "@mui/material";
 
 interface Driver {
   name: string;
@@ -29,8 +29,18 @@ export function DriverSelection({
   };
 
   return (
-    <div>
-      <h2>Selecione o {currentIndex + 1}º colocado</h2>
+    <Box
+    sx={{
+      height: "100vh",
+      display: "flex",
+      justifyContent: "center",
+      alignItems: "center",
+    }}
+  >
+    <Box sx={{ maxWidth: "400px", mx: "auto" }}>
+      <Typography
+      variant="h2"
+      >Selecione o {currentIndex + 1}º </Typography>
       {drivers.map((driver, index) => (
         <Button
           key={index}
@@ -38,11 +48,11 @@ export function DriverSelection({
           onClick={() => handleDriverClick(driver)}
           fullWidth
           sx={{ mt: 1 }}
-          disabled={index < currentIndex}
+          disabled={(index < currentIndex)}
         >
           {`${index + 1}º - ${driver.name}`}
         </Button>
-      ))}
+        ))}
       <Button
         variant="contained"
         onClick={handleGoBack}
@@ -52,6 +62,7 @@ export function DriverSelection({
       >
         Voltar
       </Button>
-    </div>
+    </Box>
+    </Box>
   );
 }

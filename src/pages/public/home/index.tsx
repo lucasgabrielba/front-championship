@@ -28,6 +28,14 @@ export function HomePage() {
         >
           Criar novo campeonato valendo a dignidade
         </Button>
+        <Button
+          onClick={() => navigate("/newChampionship")}
+          variant="outlined"
+          color="primary"
+          sx={{ alignSelf: "center", marginTop: "10px" }}
+        >
+          Estatisticas de jogadores
+        </Button>
       </Container>
     </>
   );

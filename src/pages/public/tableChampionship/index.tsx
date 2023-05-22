@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { DriversTable } from "./table";
-import { Box, Button, CircularProgress, Typography } from "@mui/material";
+import { Box, Button, CircularProgress, Collapse, Typography } from "@mui/material";
 import { useNavigate, useParams } from "react-router-dom";
-import { getTable } from "../../../service/score";
+import { getTable, resetChampionship } from "../../../service/score";
 import { ScoreDTO } from "../../../service/score/score";
 
 export function TableChampionship() {
@@ -12,7 +12,9 @@ export function TableChampionship() {
   const [championshipName, setChampionshipName] = useState<string>();
   const [drivers, setDrivers] = useState<ScoreDTO[]>([]);
   const [currentStage, setCurrentStage] = useState<number>();
+  const [rounds, setRounds] = useState<number>();
   const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [showOptions, setShowOptions] = useState<boolean>(false);
 
   useEffect(() => {
     const handleScores = async () => {
@@ -22,6 +24,7 @@ export function TableChampionship() {
           setDrivers(response);
           setChampionshipName(response[0]?.championship.name);
           setCurrentStage(response[0]?.championship.stage);
+          setRounds(response[0]?.championship.rounds);
         }
       } catch (error) {
         console.error("Error:", error);
@@ -35,6 +38,27 @@ export function TableChampionship() {
 
   const handleAddScoreClick = () => {
     navigate(`/addScore/${championshipId}`);
+  };
+
+  const handleRestartChampionship = async () => {
+    try {
+      await resetChampionship(drivers);
+      window.location.reload();
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  };
+
+  const handleCreateNewChampionship = () => {
+    navigate("/newChampionship");
+  };
+
+  const handleEditDrivers = () => {
+    navigate(`/addDrivers/${championshipId}`);
+  };
+
+  const handleShowOptions = () => {
+    setShowOptions(!showOptions);
   };
 
   return (
@@ -57,11 +81,7 @@ export function TableChampionship() {
             }}
           >
             <CircularProgress />
-            <Typography
-              variant="body1"
-              align="center"
-              sx={{ pt: 1 }}
-            >
+            <Typography variant="body1" align="center" sx={{ pt: 1 }}>
               Carregando...
             </Typography>
           </Box>
@@ -74,19 +94,78 @@ export function TableChampionship() {
             >
               {championshipName}
             </Typography>
-            <Typography variant="h6" align="center" sx={{ paddingBottom: 1 }}>
-              Etapa {currentStage}
-            </Typography>
+            {currentStage !== rounds ? (
+              <Typography
+                variant="h6"
+                align="center"
+                sx={{ paddingBottom: 1 }}
+              >
+                Etapa {currentStage! + 1}/{rounds}
+              </Typography>
+            ) : (
+              <Typography
+                variant="h6"
+                align="center"
+                sx={{ paddingBottom: 1 }}
+              >
+                Resultado Final
+              </Typography>
+            )}
             <DriversTable drivers={drivers} />
-            <Button
+            {currentStage === rounds ? (
+              <Box sx={{ textAlign: "center", mt: 2 }}>
+                <Typography variant="h6" color="error" sx={{ mb: 1 }}>
+                  {drivers[drivers.length - 1]?.driver.name} tomou no cu e terá que{" "}
+                  {drivers[0]?.championship.bet}
+                </Typography>
+              </Box>
+            ) : (
+              <Button
+                variant="contained"
+                color="success"
+                fullWidth
+                sx={{ mt: 2, mb: 2 }}
+                onClick={handleAddScoreClick}
+              >
+                Adicionar Nova Pontuação
+              </Button>
+            )}
+              <Button
               variant="contained"
-              color="primary"
               fullWidth
-              sx={{ mt: 2 }}
-              onClick={handleAddScoreClick}
+              onClick={handleShowOptions}
+              sx={{ mb: 1 }}
             >
-              Adicionar Nova Pontuação
+              {showOptions ? "Ocultar Opções" : "Mostrar Opções"}
             </Button>
+            <Collapse in={showOptions}>
+              <Box>
+                  <Button
+                  variant="outlined"
+                  fullWidth
+                  onClick={handleEditDrivers}
+                  sx={{ mb: 1 }}
+                >
+                  Editar Jogadores
+                </Button>
+                <Button
+                  variant="outlined"
+                  fullWidth
+                  onClick={handleRestartChampionship}
+                  sx={{ mb: 1 }}
+                >
+                  Reiniciar Campeonato
+                </Button>
+                <Button
+                  variant="outlined"
+                  fullWidth
+                  onClick={handleCreateNewChampionship}
+                >
+                  Criar Novo Campeonato
+                </Button>
+              </Box>
+            </Collapse>
+          
           </>
         )}
       </Box>
