@@ -1,6 +1,5 @@
 import axios from "axios"
-import { ScoreDTO } from "./score"
-import { DriverDTO } from "../driver/driver"
+import { ScoreDTO, Statistics } from "./score"
 import { Driver } from "../../pages/public/addScore"
 
 const url = 'http://localhost:4000/score'
@@ -36,6 +35,16 @@ export async function addScoreInDrivers(data: Driver[], championshipId: string):
 export async function resetChampionship(data: ScoreDTO[]): Promise<boolean | undefined> {
   try {
     const response = await axios.post(url + `/resetScores`, data)
+    return response.data
+  } catch (err) {
+    new Error('err')
+  }
+}
+
+
+export async function getStatistcs(): Promise<Statistics[] | undefined> {
+  try {
+    const response = await axios.get(url + `/statistics`)
     return response.data
   } catch (err) {
     new Error('err')

@@ -18,7 +18,7 @@ export function HomePage() {
           Bem-vindo
         </Typography>
         <Typography variant="h6" align="center" paragraph>
-          Aposte corrida com seus amigos valendo a dignidade.
+          Organize campeonatos de corrida com os amigos
         </Typography>
         <Button
           onClick={() => navigate("/newChampionship")}
@@ -26,10 +26,10 @@ export function HomePage() {
           color="primary"
           sx={{ alignSelf: "center" }}
         >
-          Criar novo campeonato valendo a dignidade
+          Criar novo campeonato
         </Button>
         <Button
-          onClick={() => navigate("/newChampionship")}
+          onClick={() => navigate("/statistics")}
           variant="outlined"
           color="primary"
           sx={{ alignSelf: "center", marginTop: "10px" }}

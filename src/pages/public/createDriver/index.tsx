@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm, Controller } from "react-hook-form";
 import { TextField, Button, Typography, Box, IconButton } from "@mui/material";
 import { Delete } from "@mui/icons-material";
@@ -55,10 +55,10 @@ export function AddRunnerForm() {
         console.log('err', error);
       }
     };
-  
+
     fetchData();
-  }, []);
-  
+  }, [championshipId]);
+
 
   return (
     <Box

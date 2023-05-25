@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Button, Box, Typography, CircularProgress } from "@mui/material";
 import { useNavigate, useParams } from "react-router-dom";
 import { ScoreDTO } from "../../../service/score/score";
@@ -80,9 +80,8 @@ export function AddScore() {
           <>
             <Box mb={2}>
               {selectedDrivers.map((driver, index) => (
-                <Typography variant="h6" align="center" key={index}>{`${
-                  index + 1
-                }º - ${driver.name}`}</Typography>
+                <Typography variant="h6" align="center" key={index}>{`${index + 1
+                  }º - ${driver.name}`}</Typography>
               ))}
             </Box>
             {isLastDriverSelected ? (

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import {
   Table,
   TableContainer,
@@ -7,11 +7,8 @@ import {
   TableRow,
   TableCell,
   Paper,
-  Typography,
   Box,
-  IconButton,
 } from "@mui/material";
-import { ArrowUpward } from "@mui/icons-material";
 import { ScoreDTO } from "../../../../service/score/score";
 
 interface DriversTableProps {
@@ -49,11 +46,11 @@ export function DriversTable({ drivers }: DriversTableProps) {
                     index === 0 && firstDriver.score > 0
                       ? "#c8e6c9"
                       : index === 0 && firstDriver.score < 0
-                      ? "#ffcdd2"
-                      : index === drivers.length - 1 && 
-                      drivers[drivers.length - 1].score !== 0
-                      ? "#ffcdd2"
-                      : "transparent",
+                        ? "#ffcdd2"
+                        : index === drivers.length - 1 &&
+                          drivers[drivers.length - 1].score !== 0
+                          ? "#ffcdd2"
+                          : "transparent",
                 }}
               >
                 <TableCell style={{ paddingRight: "16px" }}>

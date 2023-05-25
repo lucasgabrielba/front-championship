@@ -12,3 +12,11 @@ export interface ScoreDTO {
   driver: DriverDTO,
   score: number
 }
+
+export interface Statistics {
+  name: string
+  championships: number
+  points: number
+  wons: number
+  losts: number
+}

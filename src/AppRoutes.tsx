@@ -5,6 +5,7 @@ import { CreateChampionshipForm } from "./pages/public/createChampionship";
 import { AddRunnerForm } from "./pages/public/createDriver";
 import { TableChampionship } from "./pages/public/tableChampionship";
 import { AddScore } from "./pages/public/addScore";
+import { StatisticsModule } from "./pages/public/statistics";
 
 export function AppRoutes() {
   return (
@@ -15,6 +16,7 @@ export function AppRoutes() {
         <Route path="/addDrivers/:championshipId" element={<AddRunnerForm />} />
         <Route path="/driversTable/:championshipId" element={<TableChampionship />} />
         <Route path="/addScore/:championshipId" element={<AddScore />} />
+        <Route path="/statistics" element={<StatisticsModule />} />
       </Routes>
     </React.Suspense>
   );

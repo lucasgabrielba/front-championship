@@ -29,7 +29,7 @@ export function CreateChampionshipForm() {
       console.log("erro");
     }
   };
-  
+
   return (
     <Box
       sx={{
@@ -92,10 +92,10 @@ export function CreateChampionshipForm() {
             )}
           />
 
-<Controller
+          <Controller
             name="bet"
             control={control}
-            rules={{ required: true, min: 1, max: 10 }}
+            rules={{ required: false }}
             render={({ field }) => (
               <TextField
                 id="bet"
@@ -106,7 +106,7 @@ export function CreateChampionshipForm() {
                 fullWidth
                 error={!!errors.bet}
                 helperText={
-                  (errors.bet?.type === "required" &&
+                  (errors.bet?.type ===
                     "Não vale a dignidade se não tiver que fazer nada.")
                 }
                 {...field}

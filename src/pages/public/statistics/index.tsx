@@ -1,63 +1,105 @@
 import { useEffect, useState } from "react";
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from "@mui/material";
+import {
+  Box,
+  Button,
+  CircularProgress,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Typography,
+} from "@mui/material";
+import { getStatistcs } from "../../../service/score";
+import { Statistics } from "../../../service/score/score";
+import { useNavigate } from "react-router-dom";
 
-interface data {
-  name: string
-  points: number 
-  winners: number
-  losers: number
-  championships: number
-}
-
-export function PlayersTable() {
-  const [playersData, setPlayersData] = useState<data>();
+export function StatisticsModule() {
+  const navigate = useNavigate();
+  const [playersData, setPlayersData] = useState<Statistics[]>();
+  const [isLoading, setIsLoading] = useState<boolean>(true);
 
   useEffect(() => {
-    // Aqui você pode fazer uma chamada para o backend para obter os dados dos jogadores
-    // e em seguida, definir os valores utilizando a função setPlayersData.
-    // Exemplo fictício:
-    // const response = await fetch("/api/playersData");
-    // const data = await response.json();
-    // setPlayersData(data.playersData);
-
-    // Comente as linhas abaixo após implementar a chamada ao backend e definir os valores corretamente.
-    const data = [
-      { name: "Jogador 1", points: 100, winners: 5, losers: 3, championships: 2 },
-      { name: "Jogador 2", points: 80, winners: 4, losers: 2, championships: 3 },
-      { name: "Jogador 3", points: 60, winners: 3, losers: 4, championships: 1 },
-    ];
-    setPlayersData(data);
+    const fetchStatistics = async () => {
+      try {
+        const response = await getStatistcs();
+        if (response) {
+          setPlayersData(response);
+        }
+      } catch (err) {
+        console.log("err", err);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    fetchStatistics();
   }, []);
 
   return (
-    <>
-      <Typography variant="h5" align="center" gutterBottom>
-        Número de campeonatos que participou: {playersData.length}
-      </Typography>
-      <TableContainer>
-        <Table>
-          <TableHead>
-            <TableRow>
-              <TableCell>Jogador</TableCell>
-              <TableCell>Pontos totais</TableCell>
-              <TableCell>Winners</TableCell>
-              <TableCell>Losers</TableCell>
-              <TableCell>Número de campeonatos</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {playersData.map((player, index) => (
-              <TableRow key={index}>
-                <TableCell>{player.name}</TableCell>
-                <TableCell>{player.points}</TableCell>
-                <TableCell>{player.winners}</TableCell>
-                <TableCell>{player.losers}</TableCell>
-                <TableCell>{player.championships}</TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
-    </>
+    <Box
+      sx={{
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
+        minHeight: "100vh",
+      }}
+    >
+      <Box sx={{ mx: "auto" }}>
+        <Typography variant="h5" align="center" gutterBottom>
+          Estatísticas
+        </Typography>
+        {isLoading ? (
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              py: 2,
+            }}
+          >
+            <CircularProgress />
+            <Typography variant="body1" align="center" sx={{ pt: 1 }}>
+              Carregando...
+            </Typography>
+          </Box>
+        ) : (
+          <TableContainer>
+            <Table>
+              <TableHead>
+                <TableRow>
+                  <TableCell>Jogador</TableCell>
+                  <TableCell>Pontos totais</TableCell>
+                  <TableCell>Winners</TableCell>
+                  <TableCell>Losers</TableCell>
+                  <TableCell>Número de campeonatos</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {playersData?.map((player, index) => (
+                  <TableRow key={index}>
+                    <TableCell align="center">{player.name}</TableCell>
+                    <TableCell align="center">{player.points}</TableCell>
+                    <TableCell align="center">{player.wons}</TableCell>
+                    <TableCell align="center">{player.losts}</TableCell>
+                    <TableCell align="center">{player.championships}</TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </TableContainer>
+        )}
+        <Button
+          variant="contained"
+          color="success"
+          fullWidth
+          sx={{ mt: 2, mb: 2 }}
+          onClick={() => navigate("/")}
+        >
+          Home
+        </Button>
+      </Box>
+    </Box>
   );
 }

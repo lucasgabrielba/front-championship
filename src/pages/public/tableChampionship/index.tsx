@@ -1,9 +1,16 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { DriversTable } from "./table";
-import { Box, Button, CircularProgress, Collapse, Typography } from "@mui/material";
+import {
+  Box,
+  Button,
+  CircularProgress,
+  Collapse,
+  Typography,
+} from "@mui/material";
 import { useNavigate, useParams } from "react-router-dom";
 import { getTable, resetChampionship } from "../../../service/score";
 import { ScoreDTO } from "../../../service/score/score";
+import { addChampion, addLoser } from "../../../service/driver";
 
 export function TableChampionship() {
   const { championshipId } = useParams();
@@ -15,6 +22,8 @@ export function TableChampionship() {
   const [rounds, setRounds] = useState<number>();
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [showOptions, setShowOptions] = useState<boolean>(false);
+  const [hasExecutedAddChampionAndLoser, setHasExecutedAddChampionAndLoser] =
+    useState<boolean>(false);
 
   useEffect(() => {
     const handleScores = async () => {
@@ -35,6 +44,26 @@ export function TableChampionship() {
 
     handleScores();
   }, [championshipId]);
+
+  useEffect(() => {
+    if (
+      currentStage === rounds &&
+      !hasExecutedAddChampionAndLoser &&
+      drivers.length > 0
+    ) {
+      const addChampionAndLoser = async () => {
+        try {
+          await addChampion(drivers[0].driver.id);
+          await addLoser(drivers[drivers.length - 1].driver.id);
+        } catch (error) {
+          console.log("error");
+        }
+      };
+
+      addChampionAndLoser();
+      setHasExecutedAddChampionAndLoser(true);
+    }
+  }, [currentStage, rounds, drivers, hasExecutedAddChampionAndLoser]);
 
   const handleAddScoreClick = () => {
     navigate(`/addScore/${championshipId}`);
@@ -95,29 +124,26 @@ export function TableChampionship() {
               {championshipName}
             </Typography>
             {currentStage !== rounds ? (
-              <Typography
-                variant="h6"
-                align="center"
-                sx={{ paddingBottom: 1 }}
-              >
+              <Typography variant="h6" align="center" sx={{ paddingBottom: 1 }}>
                 Etapa {currentStage! + 1}/{rounds}
               </Typography>
             ) : (
-              <Typography
-                variant="h6"
-                align="center"
-                sx={{ paddingBottom: 1 }}
-              >
+              <Typography variant="h6" align="center" sx={{ paddingBottom: 1 }}>
                 Resultado Final
               </Typography>
             )}
             <DriversTable drivers={drivers} />
             {currentStage === rounds ? (
               <Box sx={{ textAlign: "center", mt: 2 }}>
-                <Typography variant="h6" color="error" sx={{ mb: 1 }}>
-                  {drivers[drivers.length - 1]?.driver.name} tomou no cu e terá que{" "}
-                  {drivers[0]?.championship.bet}
+                <Typography variant="h6" color="success" sx={{ mb: 1 }}>
+                  {drivers[0]?.driver.name} venceu o campeonato!
                 </Typography>
+                {drivers[0].championship.bet && (
+                  <Typography variant="h6" color="error" sx={{ mb: 1 }}>
+                    {drivers[drivers.length - 1]?.driver.name} deve{" "}
+                    {drivers[0].championship.bet}!
+                  </Typography>
+                )}
               </Box>
             ) : (
               <Button
@@ -130,7 +156,7 @@ export function TableChampionship() {
                 Adicionar Nova Pontuação
               </Button>
             )}
-              <Button
+            <Button
               variant="contained"
               fullWidth
               onClick={handleShowOptions}
@@ -140,7 +166,7 @@ export function TableChampionship() {
             </Button>
             <Collapse in={showOptions}>
               <Box>
-                  <Button
+                <Button
                   variant="outlined"
                   fullWidth
                   onClick={handleEditDrivers}
@@ -160,12 +186,19 @@ export function TableChampionship() {
                   variant="outlined"
                   fullWidth
                   onClick={handleCreateNewChampionship}
+                  sx={{ mb: 1 }}
                 >
                   Criar Novo Campeonato
                 </Button>
+                <Button
+                  variant="outlined"
+                  fullWidth
+                  onClick={() => navigate("/")}
+                >
+                  Home
+                </Button>
               </Box>
             </Collapse>
-          
           </>
         )}
       </Box>
